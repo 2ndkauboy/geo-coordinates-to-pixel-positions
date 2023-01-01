@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #leaflet-map {
+            width: 585.506px;
+            height: 791.999px;
+            background: white;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="leaflet-map"></div>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
+<script>
+    var capitals = [
+        {
+            'state': 'BB', 'name': 'Potsdam',
+            'lat': 52.4009309, 'lng': 13.0591397,
+            'url': 'https://de.wikipedia.org/wiki/Potsdam'
+        },
+        {
+            'state': 'BE', 'name': 'Berlin',
+            'lat': 52.5170365, 'lng': 13.3888599,
+            'url': 'https://de.wikipedia.org/wiki/Berlin'
+        },
+        {
+            'state': 'BW', 'name': 'Stuttgart',
+            'lat': 48.7784485, 'lng': 9.1800132,
+            'url': 'https://de.wikipedia.org/wiki/Stuttgart'
+        },
+        {
+            'state': 'BY', 'name': 'München',
+            'lat': 48.1371079, 'lng': 11.5753822,
+            'url': 'https://de.wikipedia.org/wiki/München'
+        },
+        {
+            'state': 'HB', 'name': 'Bremen',
+            'lat': 53.0758196, 'lng': 8.8071646,
+            'url': 'https://de.wikipedia.org/wiki/Bremen'
+        },
+        {
+            'state': 'HE', 'name': 'Wiesbaden',
+            'lat': 50.0820384, 'lng': 8.2416556,
+            'url': 'https://de.wikipedia.org/wiki/Wiesbaden'
+        },
+        {
+            'state': 'HH', 'name': 'Hamburg',
+            'lat': 53.550341, 'lng': 10.000654,
+            'url': 'https://de.wikipedia.org/wiki/Hamburg'
+        },
+        {
+            'state': 'MV', 'name': 'Schwerin',
+            'lat': 53.6288297, 'lng': 11.4148038,
+            'url': 'https://de.wikipedia.org/wiki/Schwerin'
+        },
+        {
+            'state': 'NI', 'name': 'Hannover',
+            'lat': 52.3744779, 'lng': 52.3744779,
+            'url': 'https://de.wikipedia.org/wiki/Hannover'
+        },
+        {
+            'state': 'NW', 'name': 'Düsseldorf',
+            'lat': 51.2254018, 'lng': 6.7763137,
+            'url': 'https://de.wikipedia.org/wiki/Düsseldorf'
+        },
+        {
+            'state': 'RP', 'name': 'Mainz',
+            'lat': 50.0012314, 'lng': 8.2762513,
+            'url': 'https://de.wikipedia.org/wiki/Mainz'
+        },
+        {
+            'state': 'SH', 'name': 'Kiel',
+            'lat': 54.3227085, 'lng': 10.135555,
+            'url': 'https://de.wikipedia.org/wiki/Kiel'
+        },
+        {
+            'state': 'SL', 'name': 'Saarbrücken',
+            'lat': 49.234362, 'lng': 6.996379,
+            'url': 'https://de.wikipedia.org/wiki/Saarbrücken'
+        },
+        {
+            'state': 'SN', 'name': 'Dresden',
+            'lat': 51.0493286, 'lng': 13.7381437,
+            'url': 'https://de.wikipedia.org/wiki/Dresden'
+        },
+        {
+            'state': 'ST', 'name': 'Magdeburg',
+            'lat': 52.1315889, 'lng': 11.6399609,
+            'url': 'https://de.wikipedia.org/wiki/Magdeburg'
+        },
+        {
+            'state': 'TH', 'name': 'Erfurt',
+            'lat': 50.9777974, 'lng': 11.0287364,
+            'url': 'https://de.wikipedia.org/wiki/Erfurt'
+        },
+    ];
+
+    // Create the map object.
+    const map = L.map( 'leaflet-map', {
+        center: [ 51.1642, 10.4541 ],
+        maxZoom: 10,
+        zoomDelta: 1,
+        zoomSnap: 0,
+        scrollWheelZoom: false,
+        trackResize: true,
+        attributionControl: false,
+    } );
+
+    // Define the image overlay and its boundaries.
+    const imageUrl = './ammap-germany-low.svg';
+    const imageBounds = [
+        [ 55.051693, 5.864765 ],
+        [ 47.269299, 15.043380 ],
+    ];
+
+    // Add the overlay to the map.
+    L.imageOverlay( imageUrl, imageBounds ).addTo( map );
+
+    // Automatically zoom the map to the boundaries.
+    map.fitBounds( imageBounds );
+
+    // Adding the marker for Brandenburg Gate to the map.
+    //L.marker([52.5162746,13.3777041]).addTo(map);
+
+    capitals.map( city => {
+        let marker = L.marker( [ city.lat, city.lng ], { title: city.name } );
+        marker.on( 'click', function () {
+            window.location = city.url;
+        } );
+        marker.addTo( map );
+    } );
+
+    // Set the current min zoom to the zoom level after init.
+    map.setMinZoom( map.getZoom() );
+
+    // Re-center the map when zoomed to minZoom level.
+    map.on( 'zoomend', function () {
+        if ( map.getZoom() === map.getMinZoom() ) {
+            map.fitBounds( imageBounds );
+        }
+    } );
+</script>
+</body>
+</html>
