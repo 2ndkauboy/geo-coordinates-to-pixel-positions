@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #leaflet-map {
+            width: 585.506px;
+            height: 791.999px;
+            background: white;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="leaflet-map"></div>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""/>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+      integrity="sha256-YU3qCpj/P06tdPBJGPax0bm6Q1wltfwjsho5TR4+TYc="
+      crossorigin=""/>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+      integrity="sha256-YSWCMtmNZNwqex4CEw1nQhvFub2lmU7vcCKP+XVwwXA="
+      crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+        integrity="sha256-Hk4dIpcqOSb0hZjgyvFOP+cEmDXUKKNE/tT542ZbNQg="
+        crossorigin=""></script>
+<script>
+    var cities = [
+        {
+            "name": "Freiburg im Breisgau",
+            "state": "bw",
+            "lat": 47.9960901,
+            "lng": 7.8494005,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Freiburg_im_Breisgau",
+        },
+        {
+            "name": "Heidelberg",
+            "state": "bw",
+            "lat": 49.4093582,
+            "lng": 8.694724,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Heidelberg",
+        },
+        {
+            "name": "Heilbronn",
+            "state": "bw",
+            "lat": 49.142291,
+            "lng": 9.218655,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Heilbronn",
+        },
+        {
+            "name": "Karlsruhe",
+            "state": "bw",
+            "lat": 49.0068705,
+            "lng": 8.4034195,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Karlsruhe",
+        },
+        {
+            "name": "Mannheim",
+            "state": "bw",
+            "lat": 49.4892913,
+            "lng": 8.4673098,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Mannheim",
+        },
+        {
+            "name": "Pforzheim",
+            "state": "bw",
+            "lat": 48.8908846,
+            "lng": 8.7029532,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Pforzheim",
+        },
+        {
+            "name": "Reutlingen",
+            "state": "bw",
+            "lat": 48.4919508,
+            "lng": 9.2114144,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Reutlingen",
+        },
+        {
+            "name": "Stuttgart",
+            "state": "bw",
+            "lat": 48.7784485,
+            "lng": 9.1800132,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Stuttgart",
+        },
+        {
+            "name": "Ulm",
+            "state": "bw",
+            "lat": 48.3974003,
+            "lng": 9.9934336,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Ulm",
+        },
+        {
+            "name": "Augsburg",
+            "state": "by",
+            "lat": 48.3668041,
+            "lng": 10.8986971,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Augsburg",
+        },
+        {
+            "name": "Erlangen",
+            "state": "by",
+            "lat": 49.5928616,
+            "lng": 11.0056,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Erlangen",
+        },
+        {
+            "name": "Fürth",
+            "state": "by",
+            "lat": 49.4772475,
+            "lng": 10.9893626,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Fürth",
+        },
+        {
+            "name": "Ingolstadt",
+            "state": "by",
+            "lat": 48.7630165,
+            "lng": 11.4250395,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Ingolstadt",
+        },
+        {
+            "name": "München",
+            "state": "by",
+            "lat": 48.1371079,
+            "lng": 11.5753822,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/München",
+        },
+        {
+            "name": "Nürnberg",
+            "state": "by",
+            "lat": 49.453872,
+            "lng": 11.077298,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Nürnberg",
+        },
+        {
+            "name": "Regensburg",
+            "state": "by",
+            "lat": 49.0195333,
+            "lng": 12.0974869,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Regensburg",
+        },
+        {
+            "name": "Würzburg",
+            "state": "by",
+            "lat": 49.79245,
+            "lng": 9.932966,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Würzburg",
+        },
+        {
+            "name": "Berlin",
+            "state": "be",
+            "lat": 52.5103817,
+            "lng": 13.4349112,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Berlin",
+        },
+        {
+            "name": "Potsdam",
+            "state": "bb",
+            "lat": 52.4009309,
+            "lng": 13.0591397,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Potsdam",
+        },
+        {
+            "name": "Bremen",
+            "state": "hb",
+            "lat": 53.0758196,
+            "lng": 8.8071646,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bremen",
+        },
+        {
+            "name": "Bremerhaven",
+            "state": "hb",
+            "lat": 53.5505392,
+            "lng": 8.5851945,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bremerhaven",
+        },
+        {
+            "name": "Hamburg",
+            "state": "hh",
+            "lat": 53.5565323,
+            "lng": 9.9776028,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Hamburg",
+        },
+        {
+            "name": "Darmstadt",
+            "state": "he",
+            "lat": 49.8851869,
+            "lng": 8.6736295,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Darmstadt",
+        },
+        {
+            "name": "Frankfurt am Main",
+            "state": "he",
+            "lat": 50.1106444,
+            "lng": 8.6820917,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Frankfurt_am_Main",
+        },
+        {
+            "name": "Hanau",
+            "state": "he",
+            "lat": 50.132881,
+            "lng": 8.9169797,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Hanau",
+        },
+        {
+            "name": "Kassel",
+            "state": "he",
+            "lat": 51.3154546,
+            "lng": 9.4924096,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Kassel",
+        },
+        {
+            "name": "Offenbach am Main",
+            "state": "he",
+            "lat": 50.1055002,
+            "lng": 8.7610698,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Offenbach_am_Main",
+        },
+        {
+            "name": "Wiesbaden",
+            "state": "he",
+            "lat": 50.0820384,
+            "lng": 8.2416556,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Wiesbaden",
+        },
+        {
+            "name": "Rostock",
+            "state": "mv",
+            "lat": 54.0924445,
+            "lng": 12.1286127,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Rostock",
+        },
+        {
+            "name": "Braunschweig",
+            "state": "ni",
+            "lat": 52.2646577,
+            "lng": 10.5236066,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Braunschweig",
+        },
+        {
+            "name": "Göttingen",
+            "state": "ni",
+            "lat": 51.5328328,
+            "lng": 9.9351811,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Göttingen",
+        },
+        {
+            "name": "Hannover",
+            "state": "ni",
+            "lat": 52.3744779,
+            "lng": 9.7385532,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Hannover",
+        },
+        {
+            "name": "Hildesheim",
+            "state": "ni",
+            "lat": 52.1521636,
+            "lng": 9.9513046,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Hildesheim",
+        },
+        {
+            "name": "Oldenburg",
+            "state": "ni",
+            "lat": 53.1389753,
+            "lng": 8.2146017,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Oldenburg",
+        },
+        {
+            "name": "Osnabrück",
+            "state": "ni",
+            "lat": 52.2719595,
+            "lng": 8.047635,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Osnabrück",
+        },
+        {
+            "name": "Salzgitter",
+            "state": "ni",
+            "lat": 52.1503721,
+            "lng": 10.3593147,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Salzgitter",
+        },
+        {
+            "name": "Wolfsburg",
+            "state": "ni",
+            "lat": 52.4205588,
+            "lng": 10.7861682,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Wolfsburg",
+        },
+        {
+            "name": "Aachen",
+            "state": "nw",
+            "lat": 50.776351,
+            "lng": 6.083862,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Aachen",
+        },
+        {
+            "name": "Bergisch Gladbach",
+            "state": "nw",
+            "lat": 50.9929303,
+            "lng": 7.1277379,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bergisch_Gladbach",
+        },
+        {
+            "name": "Bielefeld",
+            "state": "nw",
+            "lat": 52.0191005,
+            "lng": 8.531007,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bielefeld",
+        },
+        {
+            "name": "Bochum",
+            "state": "nw",
+            "lat": 51.4818111,
+            "lng": 7.2196635,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bochum",
+        },
+        {
+            "name": "Bonn",
+            "state": "nw",
+            "lat": 50.735851,
+            "lng": 7.10066,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bonn",
+        },
+        {
+            "name": "Bottrop",
+            "state": "nw",
+            "lat": 51.521581,
+            "lng": 6.929204,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Bottrop",
+        },
+        {
+            "name": "Dortmund",
+            "state": "nw",
+            "lat": 51.5142273,
+            "lng": 7.4652789,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Dortmund",
+        },
+        {
+            "name": "Duisburg",
+            "state": "nw",
+            "lat": 51.434999,
+            "lng": 6.759562,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Duisburg",
+        },
+        {
+            "name": "Düsseldorf",
+            "state": "nw",
+            "lat": 51.2254018,
+            "lng": 6.7763137,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Düsseldorf",
+        },
+        {
+            "name": "Essen",
+            "state": "nw",
+            "lat": 51.4582235,
+            "lng": 7.0158171,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Essen",
+        },
+        {
+            "name": "Gelsenkirchen",
+            "state": "nw",
+            "lat": 51.5110321,
+            "lng": 7.0960124,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Gelsenkirchen",
+        },
+        {
+            "name": "Gütersloh",
+            "state": "nw",
+            "lat": 51.9063997,
+            "lng": 8.3782078,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Gütersloh",
+        },
+        {
+            "name": "Hagen",
+            "state": "nw",
+            "lat": 51.3582945,
+            "lng": 7.473296,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Hagen",
+        },
+        {
+            "name": "Hamm",
+            "state": "nw",
+            "lat": 51.6804093,
+            "lng": 7.815197,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Hamm",
+        },
+        {
+            "name": "Herne",
+            "state": "nw",
+            "lat": 51.5380394,
+            "lng": 7.219985,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Herne",
+        },
+        {
+            "name": "Köln",
+            "state": "nw",
+            "lat": 50.938361,
+            "lng": 6.959974,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Köln",
+        },
+        {
+            "name": "Krefeld",
+            "state": "nw",
+            "lat": 51.3331205,
+            "lng": 6.5623343,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Krefeld",
+        },
+        {
+            "name": "Leverkusen",
+            "state": "nw",
+            "lat": 51.0324743,
+            "lng": 6.9881194,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Leverkusen",
+        },
+        {
+            "name": "Moers",
+            "state": "nw",
+            "lat": 51.451283,
+            "lng": 6.62843,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Moers",
+        },
+        {
+            "name": "Mönchengladbach",
+            "state": "nw",
+            "lat": 51.1946983,
+            "lng": 6.4353641,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Mönchengladbach",
+        },
+        {
+            "name": "Mülheim an der Ruhr",
+            "state": "nw",
+            "lat": 51.4272925,
+            "lng": 6.8829192,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Mülheim_an_der_Ruhr",
+        },
+        {
+            "name": "Münster",
+            "state": "nw",
+            "lat": 51.9625101,
+            "lng": 7.6251879,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Münster",
+        },
+        {
+            "name": "Neuss",
+            "state": "nw",
+            "lat": 51.1981778,
+            "lng": 6.6916476,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Neuss",
+        },
+        {
+            "name": "Oberhausen",
+            "state": "nw",
+            "lat": 51.4696137,
+            "lng": 6.8514435,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Oberhausen",
+        },
+        {
+            "name": "Paderborn",
+            "state": "nw",
+            "lat": 51.71895955,
+            "lng": 8.764869778177559,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Paderborn",
+        },
+        {
+            "name": "Recklinghausen",
+            "state": "nw",
+            "lat": 51.6143815,
+            "lng": 7.1978546,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Recklinghausen",
+        },
+        {
+            "name": "Remscheid",
+            "state": "nw",
+            "lat": 51.1798706,
+            "lng": 7.1943544,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Remscheid",
+        },
+        {
+            "name": "Siegen",
+            "state": "nw",
+            "lat": 50.8749804,
+            "lng": 8.0227233,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Siegen",
+        },
+        {
+            "name": "Solingen",
+            "state": "nw",
+            "lat": 51.1721629,
+            "lng": 7.0845893,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Solingen",
+        },
+        {
+            "name": "Wuppertal",
+            "state": "nw",
+            "lat": 51.264018,
+            "lng": 7.1780374,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Wuppertal",
+        },
+        {
+            "name": "Koblenz",
+            "state": "rp",
+            "lat": 50.3533278,
+            "lng": 7.5943951,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Koblenz",
+        },
+        {
+            "name": "Ludwigshafen am Rhein",
+            "state": "rp",
+            "lat": 49.4704113,
+            "lng": 8.4381568,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Ludwigshafen_am_Rhein",
+        },
+        {
+            "name": "Mainz",
+            "state": "rp",
+            "lat": 50.0012314,
+            "lng": 8.2762513,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Mainz",
+        },
+        {
+            "name": "Trier",
+            "state": "rp",
+            "lat": 49.7596208,
+            "lng": 6.6441878,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Trier",
+        },
+        {
+            "name": "Saarbrücken",
+            "state": "sl",
+            "lat": 49.234362,
+            "lng": 6.996379,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Saarbrücken",
+        },
+        {
+            "name": "Chemnitz",
+            "state": "sn",
+            "lat": 50.8322608,
+            "lng": 12.9252977,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Chemnitz",
+        },
+        {
+            "name": "Dresden",
+            "state": "sn",
+            "lat": 51.0493286,
+            "lng": 13.7381437,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Dresden",
+        },
+        {
+            "name": "Leipzig",
+            "state": "sn",
+            "lat": 51.3406321,
+            "lng": 12.3747329,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Leipzig",
+        },
+        {
+            "name": "Halle (Saale)",
+            "state": "st",
+            "lat": 51.4825041,
+            "lng": 11.9705452,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Halle_(Saale)",
+        },
+        {
+            "name": "Magdeburg",
+            "state": "st",
+            "lat": 52.1315889,
+            "lng": 11.6399609,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Magdeburg",
+        },
+        {
+            "name": "Kiel",
+            "state": "sh",
+            "lat": 54.3227085,
+            "lng": 10.135555,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Kiel",
+        },
+        {
+            "name": "Lübeck",
+            "state": "sh",
+            "lat": 53.866444,
+            "lng": 10.684738,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Lübeck",
+        },
+        {
+            "name": "Erfurt",
+            "state": "th",
+            "lat": 50.9777974,
+            "lng": 11.0287364,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Erfurt",
+        },
+        {
+            "name": "Jena",
+            "state": "th",
+            "lat": 50.9281717,
+            "lng": 11.5879359,
+            "url": "https:\/\/de.wikipedia.org\/wiki\/Jena",
+        },
+    ];
+
+    // Create the map object.
+    const map = L.map( 'leaflet-map', {
+        center: [ 51.1642, 10.4541 ],
+        maxZoom: 10,
+        zoomDelta: 1,
+        zoomSnap: 0,
+        scrollWheelZoom: false,
+        trackResize: true,
+        attributionControl: false,
+    } );
+
+    // Define the image overlay and its boundaries.
+    const imageUrl = './ammap-germany-low.svg';
+    const imageBounds = [
+        [ 55.051693, 5.864765 ],
+        [ 47.269299, 15.043380 ],
+    ];
+
+    // Add the overlay to the map.
+    L.imageOverlay( imageUrl, imageBounds ).addTo( map );
+
+    // Automatically zoom the map to the boundaries.
+    map.fitBounds( imageBounds );
+
+    const stateMarkers = {};
+
+    // Get a unique list of all states from the cities array.
+    [ ...new Set( cities.map( city => city.state ) ) ].map( state => {
+        // Create a markerClusterGroup per state.
+        stateMarkers[state] = L.markerClusterGroup( {
+            maxClusterRadius: 1000,
+            spiderfyOnMaxZoom: false,
+            showCoverageOnHover: false,
+            disableClusteringAtZoom: 8,
+        } );
+    } );
+
+    // Create city markers and add them to the correct markerClusterGroup.
+    cities.map( city => {
+        let marker = L.marker( [ city.lat, city.lng ], { title: city.name } );
+        marker.on( 'click', function () {
+            window.location = city.url;
+        } );
+        stateMarkers[city.state].addLayer( marker );
+    } );
+
+    // Add all markerClusterGroups to the map.
+    Object.keys( stateMarkers ).map( state => {
+        stateMarkers[state].addTo( map );
+    } );
+
+    // Set the current min zoom to the zoom level after init.
+    map.setMinZoom( map.getZoom() );
+
+    // Re-center the map when zoomed to minZoom level.
+    map.on( 'zoomend', function () {
+        if ( map.getZoom() === map.getMinZoom() ) {
+            map.fitBounds( imageBounds );
+        }
+    } );
+</script>
+</body>
+</html>
